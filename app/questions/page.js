@@ -1,5 +1,6 @@
 // app/questions/page.js
 export const dynamic = 'force-dynamic'
+export const runtime = 'edge'
 
 import { supabaseAdmin } from '../lib/supabaseAdmin'
 import QuestionsTable from './QuestionsTable'
