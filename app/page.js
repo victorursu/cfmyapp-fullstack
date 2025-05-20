@@ -6,6 +6,7 @@ import Prism from 'prismjs'
 import 'prismjs/components/prism-json'
 //import 'prismjs/themes/prism.css'
 import 'prismjs/themes/prism-tomorrow.css'
+import Link from 'next/link'
 import styles from './page.module.css'
 
 export default function Home() {
@@ -68,7 +69,9 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.formCard}>
           <h1 className={styles.title}>Create Literacy Questions.</h1>
-
+          <Link href="/questions" className={styles.seeAllLink}>
+                      See all questions
+          </Link>
           <form onSubmit={handleSubmit} className={styles.form}>
             <label>
               Type

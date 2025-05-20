@@ -2,23 +2,30 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import styles from './page.module.css'
-
 
 export default function QuestionsTable({ initialQuestions }) {
     const [questions, setQuestions] = useState(initialQuestions)
     const [selected, setSelected] = useState([])
     const [modalPayload, setModalPayload] = useState(null)
+    const [filterType, setFilterType] = useState('')
+    const [filterLanguage, setFilterLanguage] = useState('')
 
-  // close modal on Escape
-  useEffect(() => {
-    if (!modalPayload) return
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setModalPayload(null)
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [modalPayload])
+    // 🔄 When the server re–renders with new data, overwrite the client state
+    useEffect(() => {
+        setQuestions(initialQuestions)
+    }, [initialQuestions])
+
+    // close modal on Escape
+    useEffect(() => {
+        if (!modalPayload) return
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') setModalPayload(null)
+        }
+        document.addEventListener('keydown', handleKeyDown)
+        return () => document.removeEventListener('keydown', handleKeyDown)
+    }, [modalPayload])
 
     const toggle = (id) =>
         setSelected((s) =>
@@ -42,7 +49,6 @@ export default function QuestionsTable({ initialQuestions }) {
             body: JSON.stringify({ ids: selected }),
         })
         if (res.ok) {
-            // remove from local state
             setQuestions(questions.filter((q) => !selected.includes(q.id)))
             setSelected([])
         } else {
@@ -50,16 +56,71 @@ export default function QuestionsTable({ initialQuestions }) {
         }
     }
 
+    // derive unique filter options
+    const types = Array.from(new Set(initialQuestions.map((q) => q.type)))
+    const languages = Array.from(
+        new Set(initialQuestions.map((q) => q.language))
+    )
+
+    // apply filters
+    const filteredQuestions = questions.filter(
+        (q) =>
+            (filterType === '' || q.type === filterType) &&
+            (filterLanguage === '' || q.language === filterLanguage)
+    )
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>All Literacy Questions.</h1>
-            <button
-                className={styles.deleteBtn}
-                onClick={handleDelete}
-                disabled={selected.length === 0}
-            >
-                Delete Selected
-            </button>
+
+            <Link href="/">
+                <button className={styles.createBtn}>
+                    Create a new question
+                </button>
+            </Link>
+
+            {/* Toolbar: filters + delete button */}
+            <div className={styles.toolbar}>
+                <div className={styles.filters}>
+                    <label>
+                        Type:
+                        <select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                        >
+                            <option value="">All Types</option>
+                            {types.map((t) => (
+                                <option key={t} value={t}>
+                                    {t}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+
+                    <label>
+                        Language:
+                        <select
+                            value={filterLanguage}
+                            onChange={(e) => setFilterLanguage(e.target.value)}
+                        >
+                            <option value="">All Languages</option>
+                            {languages.map((l) => (
+                                <option key={l} value={l}>
+                                    {l}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+
+                <button
+                    className={styles.deleteBtn}
+                    onClick={handleDelete}
+                    disabled={selected.length === 0}
+                >
+                    Delete Selected
+                </button>
+            </div>
 
             <table className={styles.table}>
                 <thead>
@@ -73,7 +134,7 @@ export default function QuestionsTable({ initialQuestions }) {
                 </tr>
                 </thead>
                 <tbody>
-                {questions.map((q) => (
+                {filteredQuestions.map((q) => (
                     <tr key={q.id}>
                         <td className={styles.selectCol}>
                             <input
@@ -85,34 +146,41 @@ export default function QuestionsTable({ initialQuestions }) {
                         <td
                             className={styles.clickableId}
                             onClick={() => setModalPayload(q.payload)}
-                            >
+                        >
                             {q.id}
                         </td>
                         <td>{new Date(q.created_at).toLocaleString()}</td>
                         <td>{q.type}</td>
                         <td>{q.language}</td>
-                        <td>{q.payload?.sentence ?? q.payload?.question  ?? q.payload?.template  ?? 'N/A'}</td>
+                        <td>
+                            {q.payload?.sentence ??
+                                q.payload?.question ??
+                                q.payload?.template ??
+                                'N/A'}
+                        </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
-                 {modalPayload && (
-                   <div className={styles.modalOverlay}>
-                         <div className={styles.modalContent}>
-                           <button
-                             className={styles.closeBtn}
-                             onClick={() => setModalPayload(null)}
-                           >
-                             ×
-                           </button>
-                           <textarea
-                             readOnly
-                             value={JSON.stringify(modalPayload, null, 2)}
-                             className={styles.modalTextarea}
-                           />
-                         </div>
-                   </div>
-                 )}
+
+            {/* JSON Preview Modal */}
+            {modalPayload && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <button
+                            className={styles.closeBtn}
+                            onClick={() => setModalPayload(null)}
+                        >
+                            ×
+                        </button>
+                        <textarea
+                            readOnly
+                            value={JSON.stringify(modalPayload, null, 2)}
+                            className={styles.modalTextarea}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

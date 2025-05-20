@@ -95,3 +95,16 @@
   text-align: center;
   color: #555;
 }
+
+.seeAllLink {
+  display: block;
+  margin: 0.5rem auto 1rem auto;
+  text-align: center;
+  font-size: 1rem;
+  color: #5b9bd5;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.seeAllLink:hover {
+  color: #4a8cc7;
+}

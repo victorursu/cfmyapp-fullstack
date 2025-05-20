@@ -122,3 +122,71 @@
     overflow: auto;
     resize: vertical;
 }
+
+/* toolbar wraps filters and delete button inline */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+/* filters keep their own inline layout */
+.filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    /* remove any bottom margin you had here */
+    margin-bottom: 0;
+}
+
+.filters label {
+    font-size: 1rem;
+    color: #444;
+}
+
+.filters select {
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #ccd0d5;
+    border-radius: 4px;
+}
+
+/* Create button under the title */
+.createBtn {
+    display: inline-block;
+    margin: 0.5rem 0 1rem 0;
+    padding: 0.5rem 1rem;
+    background: #5b9bd5;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.createBtn:hover {
+    background: #4a8cc7;
+}
+
+/* Ensure toolbar margin shifts down from create button */
+.toolbar {
+    margin-top: 0.5rem;
+}
+/* Center the “Create” button */
+.createBtn {
+    display: block;                /* make it fill its container */
+    margin: 0.5rem auto 1rem auto; /* top 0.5rem, bottom 1rem, auto left/right */
+}
+
+/* Give the toolbar a light grey background */
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    background: #f0f0f0;  /* light grey */
+    padding: 0.75rem;     /* add some breathing room */
+    border-radius: 6px;   /* soften the corners */
+}
