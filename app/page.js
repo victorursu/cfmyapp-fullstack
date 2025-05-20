@@ -20,8 +20,10 @@ export default function Home() {
       body: JSON.stringify({ type, language, payload: data }),
     })
 
+    const result = await res.json()
+
     if (res.ok) {
-      setStatus('✅ Submitted!')
+      setStatus(`✅ Submitted ${result.id}`)
       setType('')
       setLang('')
       setData('')
@@ -34,7 +36,7 @@ export default function Home() {
   return (
       <main className={styles.main}>
         <div className={styles.formCard}>
-          <h1 className={styles.title}>Submit Your Data</h1>
+          <h1 className={styles.title}>Create Literacy Questions.</h1>
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <label>
@@ -61,9 +63,11 @@ export default function Home() {
                   required
               >
                 <option value="" disabled>Choose language…</option>
-                <option value="ro">ro</option>
-                <option value="hu">hu</option>
-                <option value="ua">ua</option>
+                <option value="ro">🇷🇴 Română'</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="hu">🇭🇺 Magyar</option>
+                <option value="rom">🏳️ Rromani</option>
+                <option value="ua">🇺🇦 Україна</option>
               </select>
             </label>
 
