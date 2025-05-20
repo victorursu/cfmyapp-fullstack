@@ -1,7 +1,6 @@
-// app/page.js
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './page.module.css'
 
 export default function Home() {
@@ -9,6 +8,27 @@ export default function Home() {
   const [language, setLang] = useState('')
   const [data, setData]   = useState('')
   const [status, setStatus] = useState('')
+
+  // whenever `type` changes, load the corresponding JSON
+  useEffect(() => {
+    if (!type) return
+
+    setStatus('Loading template…')
+    fetch(`/data/${type}.json`)
+        .then((res) => {
+          if (!res.ok) throw new Error(`Failed to load /data/${type}.json`)
+          return res.json()
+        })
+        .then((json) => {
+          // pretty-print into the textarea
+          setData(JSON.stringify(json, null, 2))
+          setStatus('')
+        })
+        .catch((err) => {
+          console.error(err)
+          setStatus(`⚠️ ${err.message}`)
+        })
+  }, [type])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -19,7 +39,6 @@ export default function Home() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, language, payload: data }),
     })
-
     const result = await res.json()
 
     if (res.ok) {
@@ -28,15 +47,14 @@ export default function Home() {
       setLang('')
       setData('')
     } else {
-      const err = await res.json()
-      setStatus(`❌ Error: ${err.error || res.statusText}`)
+      setStatus(`❌ Error: ${result.error || res.statusText}`)
     }
   }
 
   return (
       <main className={styles.main}>
         <div className={styles.formCard}>
-          <h1 className={styles.title}>Create Literacy Questions.</h1>
+          <h1 className={styles.title}>Submit Your Data</h1>
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <label>
@@ -63,7 +81,7 @@ export default function Home() {
                   required
               >
                 <option value="" disabled>Choose language…</option>
-                <option value="ro">🇷🇴 Română'</option>
+                <option value="ro">🇷🇴 Română</option>
                 <option value="en">🇬🇧 English</option>
                 <option value="hu">🇭🇺 Magyar</option>
                 <option value="rom">🏳️ Rromani</option>
@@ -74,10 +92,10 @@ export default function Home() {
             <label>
               Data (JSON)
               <textarea
-                  rows={6}
+                  rows={10}
                   value={data}
                   onChange={(e) => setData(e.target.value)}
-                  placeholder={`e.g. {"foo":"bar"}`}
+                  placeholder={`Select a type to load its template…`}
                   required
               />
             </label>
