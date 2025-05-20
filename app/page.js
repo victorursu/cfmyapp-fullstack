@@ -61,7 +61,7 @@ export default function Home() {
   return (
       <main className={styles.main}>
         <div className={styles.formCard}>
-          <h1 className={styles.title}>Submit Your Data</h1>
+          <h1 className={styles.title}>Create Literacy Questions.</h1>
 
           <form onSubmit={handleSubmit} className={styles.form}>
             <label>
