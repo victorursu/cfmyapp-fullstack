@@ -3,28 +3,43 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { createClient } from '@supabase/supabase-js'
 import styles from './page.module.css'
 
+// initialize a client using your public anon key
+const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+)
+
 export default function QuestionsTable({ initialQuestions }) {
+    // start with whatever came from the server, but we'll overwrite on mount
     const [questions, setQuestions] = useState(initialQuestions)
     const [selected, setSelected] = useState([])
     const [modalPayload, setModalPayload] = useState(null)
     const [filterType, setFilterType] = useState('')
     const [filterLanguage, setFilterLanguage] = useState('')
 
-    // 🔄 When the server re–renders with new data, overwrite the client state
+    // ⚡️ fetch fresh data whenever this component mounts
     useEffect(() => {
-        setQuestions(initialQuestions)
-    }, [initialQuestions])
+        async function loadQuestions() {
+            const { data, error } = await supabase
+                .from('literacyQuestions')
+                .select('id, created_at, type, language, payload')
+                .order('created_at', { ascending: false })
+            if (!error && data) {
+                setQuestions(data)
+            }
+        }
+        loadQuestions()
+    }, [])
 
     // close modal on Escape
     useEffect(() => {
         if (!modalPayload) return
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') setModalPayload(null)
-        }
-        document.addEventListener('keydown', handleKeyDown)
-        return () => document.removeEventListener('keydown', handleKeyDown)
+        const onKey = (e) => e.key === 'Escape' && setModalPayload(null)
+        document.addEventListener('keydown', onKey)
+        return () => document.removeEventListener('keydown', onKey)
     }, [modalPayload])
 
     const toggle = (id) =>
@@ -33,10 +48,10 @@ export default function QuestionsTable({ initialQuestions }) {
         )
 
     const handleDelete = async () => {
-        if (selected.length === 0) return
+        if (!selected.length) return
         if (
             !confirm(
-                `Are you sure you want to delete ${selected.length} question${
+                `Delete ${selected.length} question${
                     selected.length > 1 ? 's' : ''
                 }?`
             )
@@ -49,6 +64,7 @@ export default function QuestionsTable({ initialQuestions }) {
             body: JSON.stringify({ ids: selected }),
         })
         if (res.ok) {
+            // update the list in-place
             setQuestions(questions.filter((q) => !selected.includes(q.id)))
             setSelected([])
         } else {
@@ -56,17 +72,15 @@ export default function QuestionsTable({ initialQuestions }) {
         }
     }
 
-    // derive unique filter options
-    const types = Array.from(new Set(initialQuestions.map((q) => q.type)))
-    const languages = Array.from(
-        new Set(initialQuestions.map((q) => q.language))
-    )
+    // build filter dropdowns from the *current* list
+    const types = Array.from(new Set(questions.map((q) => q.type)))
+    const languages = Array.from(new Set(questions.map((q) => q.language)))
 
-    // apply filters
-    const filteredQuestions = questions.filter(
+    // apply user-selected filters
+    const filtered = questions.filter(
         (q) =>
-            (filterType === '' || q.type === filterType) &&
-            (filterLanguage === '' || q.language === filterLanguage)
+            (!filterType || q.type === filterType) &&
+            (!filterLanguage || q.language === filterLanguage)
     )
 
     return (
@@ -79,7 +93,7 @@ export default function QuestionsTable({ initialQuestions }) {
                 </button>
             </Link>
 
-            {/* Toolbar: filters + delete button */}
+            {/* toolbar: filters + delete */}
             <div className={styles.toolbar}>
                 <div className={styles.filters}>
                     <label>
@@ -116,7 +130,7 @@ export default function QuestionsTable({ initialQuestions }) {
                 <button
                     className={styles.deleteBtn}
                     onClick={handleDelete}
-                    disabled={selected.length === 0}
+                    disabled={!selected.length}
                 >
                     Delete Selected
                 </button>
@@ -134,36 +148,38 @@ export default function QuestionsTable({ initialQuestions }) {
                 </tr>
                 </thead>
                 <tbody>
-                {filteredQuestions.map((q) => (
-                    <tr key={q.id}>
-                        <td className={styles.selectCol}>
-                            <input
-                                type="checkbox"
-                                checked={selected.includes(q.id)}
-                                onChange={() => toggle(q.id)}
-                            />
-                        </td>
-                        <td
-                            className={styles.clickableId}
-                            onClick={() => setModalPayload(q.payload)}
-                        >
-                            {q.id}
-                        </td>
-                        <td>{new Date(q.created_at).toLocaleString()}</td>
-                        <td>{q.type}</td>
-                        <td>{q.language}</td>
-                        <td>
-                            {q.payload?.sentence ??
-                                q.payload?.question ??
-                                q.payload?.template ??
-                                'N/A'}
-                        </td>
-                    </tr>
-                ))}
+                {filtered.map((q) => {
+                    const title =
+                        q.payload?.sentence ??
+                        q.payload?.question ??
+                        q.payload?.template ??
+                        'N/A'
+                    return (
+                        <tr key={q.id}>
+                            <td className={styles.selectCol}>
+                                <input
+                                    type="checkbox"
+                                    checked={selected.includes(q.id)}
+                                    onChange={() => toggle(q.id)}
+                                />
+                            </td>
+                            <td
+                                className={styles.clickableId}
+                                onClick={() => setModalPayload(q.payload)}
+                            >
+                                {q.id}
+                            </td>
+                            <td>{new Date(q.created_at).toLocaleString()}</td>
+                            <td>{q.type}</td>
+                            <td>{q.language}</td>
+                            <td>{title}</td>
+                        </tr>
+                    )
+                })}
                 </tbody>
             </table>
 
-            {/* JSON Preview Modal */}
+            {/* JSON modal */}
             {modalPayload && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
