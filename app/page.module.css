@@ -51,11 +51,17 @@
 
 .form textarea,
 .editor {
-  background: #fdfdfd;
+  /* background: #fdfdfd !important; */
   font-family: 'Fira Code', monospace;
   min-height: 200px;
   overflow: auto;
 }
+.editor {
+  background: #2d2d2d !important;
+  /* optional: light text if needed */
+  color: #ccc !important;
+}
+
 
 .form textarea {
   min-height: 40vh;

@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import Editor from 'react-simple-code-editor'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-json'
-import 'prismjs/themes/prism.css'
+//import 'prismjs/themes/prism.css'
+import 'prismjs/themes/prism-tomorrow.css'
 import styles from './page.module.css'
 
 export default function Home() {
