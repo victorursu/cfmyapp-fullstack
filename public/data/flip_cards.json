@@ -1,0 +1,21 @@
+{
+  "type": "flip_cards",
+  "pairs": [
+    {
+      "left": "Dog",
+      "right": "Caine"
+    },
+    {
+      "left": "Cat",
+      "right": "Pisică"
+    },
+    {
+      "left": "Bird",
+      "right": "Pasăre"
+    },
+    {
+      "left": "Ant",
+      "right": "Furnica"
+    }
+  ]
+}

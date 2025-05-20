@@ -1,0 +1,12 @@
+{
+  "type": "drag_words",
+  "answers": {
+    "slot1": "plec",
+    "slot2": "autobuzul"
+  },
+  "template": "Eu ___ la școală cu ___.",
+  "wordBank": [
+    "plec",
+    "autobuzul"
+  ]
+}

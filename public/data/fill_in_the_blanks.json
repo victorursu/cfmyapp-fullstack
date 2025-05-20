@@ -1,0 +1,19 @@
+{
+  "type": "fill_in_the_blanks",
+  "blanks": [
+    {
+      "id": 1,
+      "correctAnswer": "pregateste"
+    },
+    {
+      "id": 2,
+      "correctAnswer": "masa"
+    },
+    {
+      "id": 3,
+      "correctAnswer": "frumoasa"
+    }
+  ],
+  "sentence": "Mama ____ ____ ____.",
+  "instructions": "Trebuie să folosești următoarele cuvinte pentru a forma propoziția: pregătește, masa, frumoasă, copac, rapid, mănâncă, prânz, scaun"
+}

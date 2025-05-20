@@ -1,0 +1,26 @@
+{
+  "type": "single_choice",
+  "theme": "improved",
+  "recording": "https://audio-samples.github.io/samples/mp3/blizzard_tts_unbiased/sample-2/real.mp3",
+  "recording_completed_message": "Who is the main character in the story?",
+  "recording_hide_answers": true,
+  "recording_allow_replay": false,
+  "options": [
+    {
+      "id": 1,
+      "text": "Lidia",
+      "isCorrect": true
+    },
+    {
+      "id": 2,
+      "text": "Tudor Arghezi",
+      "isCorrect": false
+    },
+    {
+      "id": 3,
+      "text": "Georgescu",
+      "isCorrect": false
+    }
+  ],
+  "question": "Press the Audio play button and listed carefully to the story. You will be prompted to answer a question."
+}

@@ -32,6 +32,13 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    // -- validate that `data` is valid JSON --
+    try {
+      JSON.parse(data)
+    } catch (err) {
+      setStatus('❌ Invalid JSON')
+      return
+    }
     setStatus('Submitting…')
 
     const res = await fetch('/api/submit', {
