@@ -1,11 +1,12 @@
+// app/page.js
 'use client'
 
 import { useState } from 'react'
-import Image from "next/image";
-import styles from "./page.module.css";
+import styles from './page.module.css'
 
 export default function Home() {
-  const [email, setEmail] = useState('')
+  const [type, setType] = useState('')
+  const [language, setLang] = useState('')
   const [data, setData]   = useState('')
   const [status, setStatus] = useState('')
 
@@ -16,12 +17,13 @@ export default function Home() {
     const res = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, jsonData: data }),
+      body: JSON.stringify({ type, language, payload: data }),
     })
 
     if (res.ok) {
       setStatus('✅ Submitted!')
-      setEmail('')
+      setType('')
+      setLang('')
       setData('')
     } else {
       const err = await res.json()
@@ -30,47 +32,59 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.main}>
-      <h1>Submit to Supabase</h1>
+      <main className={styles.main}>
+        <div className={styles.formCard}>
+          <h1 className={styles.title}>Submit Your Data</h1>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <label>
-          Email
-          <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-          />
-        </label>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <label>
+              Type
+              <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  required
+              >
+                <option value="" disabled>Choose type…</option>
+                <option value="fill_in_the_blanks">Fill in the Blanks</option>
+                <option value="flip_cards">Flip Cards</option>
+                <option value="single_choice">Single Choice</option>
+                <option value="multichoice">Multi Choice</option>
+                <option value="drag_words">Drag Words</option>
+              </select>
+            </label>
 
-        <label>
-          Data (JSON)
-          <textarea
-              rows={6}
-              value={data}
-              onChange={(e) => setData(e.target.value)}
-              placeholder={`e.g. {"foo": "bar"}`}
-              required
-          />
-        </label>
+            <label>
+              Language
+              <select
+                  value={language}
+                  onChange={(e) => setLang(e.target.value)}
+                  required
+              >
+                <option value="" disabled>Choose language…</option>
+                <option value="ro">ro</option>
+                <option value="hu">hu</option>
+                <option value="ua">ua</option>
+              </select>
+            </label>
 
-        <button type="submit">Send</button>
-      </form>
+            <label>
+              Data (JSON)
+              <textarea
+                  rows={6}
+                  value={data}
+                  onChange={(e) => setData(e.target.value)}
+                  placeholder={`e.g. {"foo":"bar"}`}
+                  required
+              />
+            </label>
 
-      {status && <p className={styles.status}>{status}</p>}
+            <button type="submit" className={styles.submitBtn}>
+              Send
+            </button>
+          </form>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-    </main>
-  );
+          {status && <p className={styles.status}>{status}</p>}
+        </div>
+      </main>
+  )
 }

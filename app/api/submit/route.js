@@ -6,11 +6,12 @@ import { supabaseAdmin } from '../../lib/supabaseAdmin'
 
 export async function POST(request) {
     try {
-        const { email, jsonData } = await request.json()
+        const { type, language, payload } = await request.json()
 
         const { error } = await supabaseAdmin
-            .from('test')
-            .insert([{ email, jsonData }])
+            .from('literacyQuestions')
+            .insert([{ type, language, payload }])
+            .select('id')
 
         if (error) {
             console.error('Supabase insert error:', error)
