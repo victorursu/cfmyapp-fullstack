@@ -1,4 +1,6 @@
 // app/api/submit/route.js
+export const runtime = 'edge'
+
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '../../lib/supabaseAdmin'
 
