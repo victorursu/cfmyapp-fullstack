@@ -1,6 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Editor from 'react-simple-code-editor'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-json'
+import 'prismjs/themes/prism.css'
 import styles from './page.module.css'
 
 export default function Home() {
@@ -33,23 +37,24 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     // -- validate that `data` is valid JSON --
-    try {
-      JSON.parse(data)
-    } catch (err) {
+    let payloadObj
+     try {
+      payloadObj = JSON.parse(data)
+      } catch (err) {
       setStatus('❌ Invalid JSON')
       return
-    }
+     }
     setStatus('Submitting…')
 
     const res = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, language, payload: data }),
+      body: JSON.stringify({ type, language, payload: payloadObj }),
     })
     const result = await res.json()
 
     if (res.ok) {
-      setStatus(`✅ Submitted ${result.id}`)
+      setStatus(`✅ Question [ ${result.id} ] was created.`)
       setType('')
       setLang('')
       setData('')
@@ -98,12 +103,14 @@ export default function Home() {
 
             <label>
               Data (JSON)
-              <textarea
-                  rows={10}
-                  value={data}
-                  onChange={(e) => setData(e.target.value)}
-                  placeholder={`Select a type to load its template…`}
-                  required
+              <Editor
+                value={data}
+                onValueChange={code => setData(code)}
+                highlight={code => Prism.highlight(code, Prism.languages.json, 'json')}
+                padding={10}
+                textareaId="json-editor"
+                className={styles.editor}
+                placeholder="Select a type to load its template…"
               />
             </label>
 

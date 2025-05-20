@@ -38,7 +38,8 @@
 
 .form input,
 .form select,
-.form textarea {
+.form textarea,
+.editor {
   margin-top: 0.5rem;
   padding: 0.65rem 0.75rem;
   border: 1px solid #ccd0d5;
@@ -46,6 +47,14 @@
   font-size: 1rem;
   transition: border-color 150ms;
   max-width: 45em;
+}
+
+.form textarea,
+.editor {
+  /* background: #fdfdfd; */
+  font-family: 'Fira Code', monospace;
+  min-height: 200px;
+  overflow: auto;
 }
 
 .form textarea {
