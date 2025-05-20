@@ -1,0 +1,124 @@
+/* app/questions/page.module.css */
+.container {
+    padding: 2rem;
+    background: var(--background, #f5f7fa);
+    min-height: 100vh;
+}
+.title {
+    margin: 0 0 1.5rem;
+    font-size: 1.75rem;
+    text-align: center;
+    color: #333;
+}
+
+.error {
+    color: #c00;
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    color: #333;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.table th {
+    background: #fafafa;
+    font-weight: 600;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.selectCol {
+  width: 3rem;
+  text-align: center;
+}
+
+.deleteBtn {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: #e74c3c;   /* red */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Clickable ID cell */
+.clickableId {
+    color: #0070f3;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Modal backdrop */
+.modalOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Modal box */
+.modalContent {
+    position: relative;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Close button */
+.closeBtn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #000;
+}
+
+/* Read-only JSON textarea */
+.modalTextarea {
+    width: 100%;
+    height: 400px;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    white-space: pre;
+    overflow: auto;
+    resize: vertical;
+}
