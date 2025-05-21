@@ -1,5 +1,6 @@
 {
   "type": "drag_words",
+  "tags": ["ortografie", "vocabular", "scriere"],
   "answers": {
     "slot1": "plec",
     "slot2": "autobuzul"

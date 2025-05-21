@@ -1,5 +1,6 @@
 {
   "type": "single_choice",
+  "tags": ["ortografie", "vocabular", "scriere"],
   "theme": "improved",
   "recording": "https://audio-samples.github.io/samples/mp3/blizzard_tts_unbiased/sample-2/real.mp3",
   "recording_completed_message": "Who is the main character in the story?",
